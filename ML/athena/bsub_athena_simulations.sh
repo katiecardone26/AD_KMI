@@ -11,7 +11,11 @@
 #   bsub < myjob.bsub
 ######################################################################
 
+<<<<<<< HEAD
 #BSUB -J "athena_simulations[1-20]"
+=======
+#BSUB -J "athena_simulations[1-10]"
+>>>>>>> 55d97b9 (updated scripts)
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -40,6 +44,7 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
+<<<<<<< HEAD
 #BSUB -R "rusage[mem=200000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
@@ -49,6 +54,17 @@
 # (Ensures the job will not exceed this maximum memory.)
 
 #BSUB -v 200000
+=======
+#BSUB -R "rusage[mem=60000]"
+# Per-process memory reservation, in MB.
+# (Ensures the job will have this minimum memory.)
+
+#BSUB -M 60000
+# Per-process memory limit, in MB.
+# (Ensures the job will not exceed this maximum memory.)
+
+#BSUB -v 60000
+>>>>>>> 55d97b9 (updated scripts)
 # Total process virtual (swap) memory limit, in MB.
 
 #-#BSUB -W 24:00
@@ -59,7 +75,11 @@
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
 
+<<<<<<< HEAD
 #-#BSUB -R "span[hosts=1]"
+=======
+#BSUB -R "span[hosts=1]"
+>>>>>>> 55d97b9 (updated scripts)
 # Require all cores to be on the same host (for multi-threaded, non-MPI).
 
 #-#BSUB -R "span[ptile=1]"
@@ -92,6 +112,7 @@ fi
 
 # create parallelization variables
 PATHWAY_SCORE=(
+<<<<<<< HEAD
         'ADSP.simulated.100_features.80%_train.negative_control.txt'
         'ADSP.simulated.2722_features.80%_train.negative_control.txt'
         'ADSP.simulated.100_features.features_0-1_signal.80%_train.positive_control.txt'
@@ -134,6 +155,30 @@ OUTPUT_PREFIX=(
         'ADSP.simulated.2722_features.features_0-2_signal.80%_train.positive_control.gesr.athena'
         'ADSP.simulated.2722_features.features_0-3_signal.80%_train.positive_control.gesr.athena'
         'ADSP.simulated.2722_features.features_0-4_signal.80%_train.positive_control.gesr.athena'
+=======
+        'ADSP.simulated.18717_features.keep_quest_comb.80%_train.negative_control.txt'
+        'ADSP.simulated.18717_features.features_0-1_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-2_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-3_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-4_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.keep_quest_comb.80%_train.negative_control.txt'
+        'ADSP.simulated.18717_features.features_0-1_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-2_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-3_signal.keep_quest_comb.80%_train.positive_control.txt'
+        'ADSP.simulated.18717_features.features_0-4_signal.keep_quest_comb.80%_train.positive_control.txt'
+)
+OUTPUT_PREFIX=(
+        'ADSP.simulated.18717_features.keep_quest_comb.80%_train.negative_control.genn.athena'
+        'ADSP.simulated.18717_features.features_0-1_signal.keep_quest_comb.80%_train.positive_control.genn.athena'
+        'ADSP.simulated.18717_features.features_0-2_signal.keep_quest_comb.80%_train.positive_control.genn.athena'
+        'ADSP.simulated.18717_features.features_0-3_signal.keep_quest_comb.80%_train.positive_control.genn.athena'
+        'ADSP.simulated.18717_features.features_0-4_signal.keep_quest_comb.80%_train.positive_control.genn.athena'
+        'ADSP.simulated.18717_features.keep_quest_comb.80%_train.negative_control.gesr.athena'
+        'ADSP.simulated.18717_features.features_0-1_signal.keep_quest_comb.80%_train.positive_control.gesr.athena'
+        'ADSP.simulated.18717_features.features_0-2_signal.keep_quest_comb.80%_train.positive_control.gesr.athena'
+        'ADSP.simulated.18717_features.features_0-3_signal.keep_quest_comb.80%_train.positive_control.gesr.athena'
+        'ADSP.simulated.18717_features.features_0-4_signal.keep_quest_comb.80%_train.positive_control.gesr.athena'
+>>>>>>> 55d97b9 (updated scripts)
 )
 
 GRAMMAR=(
@@ -142,6 +187,7 @@ GRAMMAR=(
         'genn.bnf'
         'genn.bnf'
         'genn.bnf'
+<<<<<<< HEAD
         'genn.bnf'
         'genn.bnf'
         'genn.bnf'
@@ -154,6 +200,8 @@ GRAMMAR=(
         'gesr.bnf'
         'gesr.bnf'
         'gesr.bnf'
+=======
+>>>>>>> 55d97b9 (updated scripts)
         'gesr.bnf'
         'gesr.bnf'
         'gesr.bnf'
@@ -173,6 +221,7 @@ GRAMMAR_INDEX=${GRAMMAR[$INDEX]}
 module purge
 module load athena/2.0.0
 
+<<<<<<< HEAD
 # call script
 athena.py \
 --missing NaN \
@@ -186,3 +235,21 @@ athena.py \
 --crossover2 block \
 --gen-cross-switch 200 \
 --out output/simulations/${OUTPUT_PREFIX_INDEX}
+=======
+which mpirun
+mpirun --version
+ldd 
+
+# call script
+mpirun --mca mca_base_component_show_load_errors 0 -np 20 athena.py \
+--missing NaN \
+--scale-contin \
+--gens 250 \
+--pop-size 1500 \
+--contin-file /project/ritchie/projects/AD_KMI/ML/simulated_datasets/${PATHWAY_SCORE_INDEX} \
+--outcome-file /project/ritchie/projects/AD_KMI/ML/athena/input/ADSP_phenotype.keep_quest_comb.80%_train.txt \
+--grammar-file /project/ritchie/projects/AD_KMI/ML/athena/athena-python/example/${GRAMMAR_INDEX} \
+--fitness balanced_acc \
+--max-depth 50 \
+--out /project/ritchie/projects/AD_KMI/ML/athena/output/simulations/${OUTPUT_PREFIX_INDEX}
+>>>>>>> 55d97b9 (updated scripts)
