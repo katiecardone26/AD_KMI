@@ -1,0 +1,54 @@
+{
+  "name": "eigenstrat_kmc",
+  "title": "Eigenstrat Applet created by Katie Cardone",
+  "summary": "Runs any eigenstrat command",
+  "dxapi": "1.0.0",
+  "version": "1.0.0",
+  "inputSpec": [
+    {
+      "name": "input",
+      "class": "array:file",
+      "optional": false,
+      "patterns": [
+        "*"
+      ],
+      "help": "input files"
+    },
+    {
+      "name": "command",
+      "class": "string",
+      "optional": false,
+      "help": "command"
+    }
+  ],
+  "runSpec": {
+    "timeoutPolicy": {
+      "*": {
+        "days": 7
+      }
+    },
+    "execDepends": [
+	    {"name": "docker"}
+     ],
+    "interpreter": "bash",
+    "file": "src/eigenstrat_kmc.sh",
+    "distribution": "Ubuntu",
+    "release": "20.04",
+    "version": "0"
+  },
+  "access": {
+    "network": [
+      "*"
+    ],
+    "project": "CONTRIBUTE"
+  },
+  "regionalOptions": {
+    "aws:eu-west-2": {
+      "systemRequirements": {
+        "*": {
+          "instanceType": "mem1_ssd1_v2_x4"
+        }
+      }
+    }
+  }
+}
