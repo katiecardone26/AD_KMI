@@ -1,6 +1,6 @@
 # copy phecode X file to association studies project (in ttyd terminal)
 dx mkdir :/AD_GWAS/input/
-dx cp project-GfYFGzQJ745y0bqkF0PGF53v:/output/file-GxPVBxQJ745y2F5vx3gyzZb7 :/AD_GWAS/input/
+dx cp :/output/file-GxPVBxQJ745y2F5vx3gyzZb7 :/AD_GWAS/input/
 
 # extract demographic data using cohort builder
 # 1. open app32133_20240306021926.dataset, which will open cohort builder
