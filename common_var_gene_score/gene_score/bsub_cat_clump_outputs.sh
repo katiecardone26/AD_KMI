@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "tpot_simulations[1-2]"
+#BSUB -J "cat_clump[1]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -25,11 +25,11 @@
 # In an array job, the variable $LSB_JOBINDEX will contain the index
 # of the current sub-job.
 
-#BSUB -o logs/tpot_simulations.%J-%I.out
+#BSUB -o logs/cat_clump.%J-%I.out
 # Filename to append the job's stdout; change to -oo to overwrite.
 # '%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/tpot_simulations.%J-%I.err
+#BSUB -e logs/cat_clump.%J-%I.err
 # Filename to append the job's stderr; change to -eo to overwrite.
 # If omitted, stderr is combined with stdout.
 
@@ -40,21 +40,21 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
-#BSUB -R "rusage[mem=200000]"
+#-#BSUB -R "rusage[mem=200000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 200000
+#-#BSUB -M 200000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
-#BSUB -v 200000
+#-#BSUB -v 200000
 # Total process virtual (swap) memory limit, in MB.
 
 #-#BSUB -W 24:00
 # Wall time limit, in the format "hours:minutes".
 
-#BSUB -n 20
+#-#BSUB -n 1
 # Number of cores to reserve (on one or more hosts; see below).
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
@@ -70,6 +70,7 @@
 
 ######################################################################
 # RITCHIE LAB BATCH ENVIRONMENT CONFIG
+#
 #
 # This ensures the job runs with the expected lab environment, even
 # if it's submitted from a non-fully-supported host (i.e. CentOS6).
@@ -90,21 +91,21 @@ fi
 # submit it from, not (necessarily) the directory the script is in.
 ######################################################################
 
-# create parallelization variables
-PATHWAY_SCORE=(
-        'ADSP.simulated.2722_features.negative_control.txt'
-        'ADSP.simulated.2722_features.features_0-1_signal.positive_control.txt'
+# define parallelization variables
+# Plink output
+PLINK_OUTPUT=(
+        "AD.AOU_ALL.UKBB.no_adjustment.metasoft.RE_PVAL.ADSP.all_variants.r2_0.1.plink_clump_output"
 )
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
-# Define parallelization variable indices
-PATHWAY_SCORE_INDEX=${PATHWAY_SCORE[$INDEX]}
+# get variable indices
+PLINK_OUTPUT_INDEX=${PLINK_OUTPUT[$INDEX]}
 
-# purge modules
-module purge
+# concatenate exclude variants
+cat clean_output/${PLINK_OUTPUT_INDEX}.chr*.exclude_variants.txt > clean_output/${PLINK_OUTPUT_INDEX}.all_chr.exclude_variants.txt
 
-# call script
-conda run -n tpot --live-stream python run_tpot.py \
---predictor simulated_datasets/${PATHWAY_SCORE_INDEX}
+# concatenate lead snps
+cat clean_output/${PLINK_OUTPUT_INDEX}.chr*.lead_snps.txt > clean_output/${PLINK_OUTPUT_INDEX}.all_chr.lead_snps.txt
+

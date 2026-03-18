@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "athena[1-8]"
+#BSUB -J "athena[1-18]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -92,24 +92,44 @@ fi
 
 # create parallelization variables
 PATHWAY_SCORE=(
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.standard_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.standard_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.minmax_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.minmax_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.standard_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.standard_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.minmax_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.minmax_scaled.go.keep_quest_comb.80%_train.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.covariates.athena_input.txt'
 )
 OUTPUT_PREFIX=(
-        'ADSP.gene_average.pathway_scores.standard_scaled.80%_train.genn.athena'
-        'ADSP.pathway_average.pathway_scores.standard_scaled.80%_train.genn.athena'
-        'ADSP.gene_average.pathway_scores.minmax_scaled.80%_train.genn.athena'
-        'ADSP.pathway_average.pathway_scores.minmax_scaled.80%_train.genn.athena'
-        'ADSP.gene_average.pathway_scores.standard_scaled.80%_train.gesr.athena'
-        'ADSP.pathway_average.pathway_scores.standard_scaled.80%_train.gesr.athena'
-        'ADSP.gene_average.pathway_scores.minmax_scaled.80%_train.gesr.athena'
-        'ADSP.pathway_average.pathway_scores.minmax_scaled.80%_train.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.no_weight.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.genn.athena'
+        'ADSP.genomics.gene_average.pathway_scores.no_weight.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.gesr.athena'
+        'ADSP.genomics.gene_average.pathway_scores.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.gesr.athena'
 )
 
 GRAMMAR=(
@@ -117,6 +137,16 @@ GRAMMAR=(
         'genn.bnf'
         'genn.bnf'
         'genn.bnf'
+        'genn.bnf'
+        'genn.bnf'
+        'genn.bnf'
+        'genn.bnf'
+        'genn.bnf'
+        'gesr.bnf'
+        'gesr.bnf'
+        'gesr.bnf'
+        'gesr.bnf'
+        'gesr.bnf'
         'gesr.bnf'
         'gesr.bnf'
         'gesr.bnf'
@@ -146,7 +176,7 @@ mpirun --mca mca_base_component_show_load_errors 0 -np 20 athena.py \
 --gens 700 \
 --pop-size 5000 \
 --contin-file ML/athena/input/${PATHWAY_SCORE_INDEX} \
---outcome-file ML/athena/input/ADSP_phenotype.keep_quest_comb.80%_train.txt \
+--outcome-file ML/athena/input/ADSP_phenotype.keep_quest_comb.no_omics_indiv.txt \
 --grammar-file ML/athena/athena-python/example/${GRAMMAR_INDEX} \
 --fitness balanced_acc \
 --crossover2 block \

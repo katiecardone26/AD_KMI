@@ -36,9 +36,7 @@ def make_arg_parser():
 
     parser.add_argument('--key_name', required = True, help = 'key name')
 
-    parser.add_argument('--remove_missing', required = True, help = 'True/False whether to remove missing values')
-
-    parser.add_argument('--sample', required = True, help = 'type of sampling', choices = ['random', 'even_omics'])
+    parser.add_argument('--remove_missing', required = True, help = 'True/False whether to remove missing values', choices = ['True', 'False'])
 
     parser.add_argument('--output_tag', required = True, help = 'phrase to add into output filename')
 
@@ -49,8 +47,7 @@ args = make_arg_parser().parse_args()
 # parse arguments
 input_prefix = args.input_prefix
 key_name = args.key_name
-remove_missing = bool(args.remove_missing)
-sample = args.sample
+remove_missing = args.remove_missing.lower() == "true"
 output_tag = args.output_tag
 
 # read in input files
@@ -66,8 +63,6 @@ else:
     sep = '\t').replace([np.inf, -np.inf], np.nan)
 print(input_df.shape)
 
-all_omics = pd.read_csv('ML/statistical_models/input/AD_KMI.multiomics.sample_list.txt',
-sep = '\t')
 
 # make dictionary
 print('running models', flush = True)
@@ -79,17 +74,11 @@ train_auprc_list = []
 train_f1_list = []
 train_balanced_acc_list = []
 
-val_auroc_list = []
-val_auprc_list = []
-val_f1_list = []
-val_balanced_acc_list = []
-
 test_auroc_list = []
 test_auprc_list = []
 test_f1_list = []
 test_balanced_acc_list = []
 
-selected_features_list = []
 best_params_list = []
 feature_importance_list = []
 
@@ -112,17 +101,11 @@ for iter in list(range(1, 101)):
     train_f1_dict = {key: [] for key in file_dict.keys()}
     train_balanced_acc_dict = {key: [] for key in file_dict.keys()}
 
-    val_auroc_dict = {key: [] for key in file_dict.keys()}
-    val_auprc_dict = {key: [] for key in file_dict.keys()}
-    val_f1_dict = {key: [] for key in file_dict.keys()}
-    val_balanced_acc_dict = {key: [] for key in file_dict.keys()}
-
     test_auroc_dict = {key: [] for key in file_dict.keys()}
     test_auprc_dict = {key: [] for key in file_dict.keys()}
     test_f1_dict = {key: [] for key in file_dict.keys()}
     test_balanced_acc_dict = {key: [] for key in file_dict.keys()}
 
-    selected_features_dict = {key: [] for key in file_dict.keys()}
     best_params_dict = {key: [] for key in file_dict.keys()}
     feature_importance_dict = {key: [] for key in file_dict.keys()}
 
@@ -132,40 +115,20 @@ for iter in list(range(1, 101)):
     # loop through dfs
     for key, df in file_dict.items():
 
+        # downsample gs
+        if downsample_gs:
+            gs_only = df[~df['ID'].isin(all_omics[0])]
+            no_gs_only = df[df['ID'].isin(all_omics[0])]
+
+            gs_only_sample = gs_only.sample(n = 792, random_state = iter)
+            
+            df = pd.concat([gs_only_sample, no_gs_only], axis = 0)
+            print(len(df.index))
+
         # split dataset
-        if sample == 'random':
-            train = df.sample(frac = 0.7, random_state = iter)
-            no_train = df.drop(train.index)
-            val = no_train.sample(frac = 0.5, random_state = iter)
-            test = no_train.drop(val.index)
+        train = df.sample(frac = 0.7, random_state = iter)
+        test = df.drop(train.index)
         elif sample == 'even_omics':
-            # split into omics and no omics
-            target = df[df['ID'].isin(all_omics['ID'])]
-            no_target = df[~df['ID'].isin(all_omics['ID'])]
-
-            # get even omics samples
-            target_train = target.sample(n = 255, random_state = iter)
-            target_no_train = target.drop(target_train.index)
-            target_val = target_no_train.sample(frac = 0.5, random_state = iter)
-            target_test = target_no_train.drop(target_val.index)
-
-            # get gene score sample numbers
-            train_total = int(len(df) * 0.7)
-            train_remaining = train_total - 254
-
-            # get rest of splits with gene score samples
-            no_target_train = no_target.sample(n = train_remaining, random_state = iter)
-            no_target_no_train = no_target.drop(no_target_train.index)
-            no_target_val = no_target_no_train.sample(frac = 0.5, random_state = iter)
-            no_target_test = no_target_no_train.drop(no_target_val.index)
-
-            # concat
-            train = pd.concat([target_train, no_target_train], axis = 0)
-            no_train = pd.concat([target_no_train, no_target_no_train], axis = 0)
-            val = pd.concat([target_val, no_target_val], axis = 0)
-            test = pd.concat([target_test, no_target_test], axis = 0)
-        else:
-            sys.exit('check sample argument')
 
         # make predictors list
         predictors = train.columns.tolist()
@@ -175,97 +138,8 @@ for iter in list(range(1, 101)):
         # scale data
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(train[predictors])
-        X_val_scaled = scaler.transform(val[predictors])
         X_test_scaled = scaler.transform(test[predictors])
-
-        # create 5-fold CV for training
-        kf = StratifiedKFold(n_splits = 5, shuffle = True, random_state = iter)
-
-        # create empty lists for training
-        cv_train_auroc_list = []
-        cv_train_auprc_list = []
-        cv_train_f1_list = []
-        cv_train_balanced_acc_list = []
-        cv_train_selected_features = []
-
-        # loop through CVs
-        for train_idx, val_idx in kf.split(X_train_scaled, train[['AD']]):
-
-            # split data
-            X_cv_train_scaled, X_cv_val_scaled = X_train_scaled[train_idx], X_train_scaled[val_idx]
-            y_cv_train, y_cv_val = train['AD'].iloc[train_idx], train['AD'].iloc[val_idx]
-
-            # build model
-            train_model = xgb.XGBClassifier(objective = 'binary:logistic', random_state = iter, n_jobs = -1)
-
-            # perform feature selection
-            feature_selector = train_model.fit(X_cv_train_scaled, y_cv_train)
-
-            # select features
-            #selector = SelectFromModel(feature_selector, threshold = "median", prefit = True)
-            importances = feature_selector.feature_importances_
-            threshold = np.percentile(importances, 75)
-            selector = SelectFromModel(feature_selector, threshold = threshold, prefit = True)
-            
-            # append selected feature mask to list
-            selected_mask = selector.get_support()
-            cv_train_selected_features.append(selected_mask)
-        
-            # select features in CVs
-            X_cv_train_selected = selector.transform(X_cv_train_scaled)
-            X_cv_val_selected = selector.transform(X_cv_val_scaled)
-
-            # rebuild model
-            train_model = xgb.XGBClassifier(objective = 'binary:logistic', random_state = iter, n_jobs = -1)
-
-            # fit model with selected features
-            train_model.fit(X_cv_train_selected,  y_cv_train)
-
-            # predict
-            y_cv_val_pred_bin = train_model.predict(X_cv_val_selected)
-            y_cv_val_pred_cont = train_model.predict_proba(X_cv_val_selected)[:, 1]
-
-            # compute metrics
-            auroc = roc_auc_score(y_cv_val, y_cv_val_pred_cont)
-            auprc = average_precision_score(y_cv_val, y_cv_val_pred_cont)
-            f1 = f1_score(y_cv_val, y_cv_val_pred_bin)
-            balanced_acc = balanced_accuracy_score(y_cv_val, y_cv_val_pred_bin)
-
-            # append to lists
-            cv_train_auroc_list.append(auroc)
-            cv_train_auprc_list.append(auprc)
-            cv_train_f1_list.append(f1)
-            cv_train_balanced_acc_list.append(balanced_acc)
-        
-        # compute mean metrics across CVs
-        auroc = np.mean(cv_train_auroc_list)
-        auprc = np.mean(cv_train_auprc_list)
-        f1 = np.mean(cv_train_f1_list)
-        balanced_acc = np.mean(cv_train_balanced_acc_list)
-
-        # append to dictionary
-        train_auroc_dict[key].append(auroc)
-        train_auprc_dict[key].append(auprc)
-        train_f1_dict[key].append(f1)
-        train_balanced_acc_dict[key].append(balanced_acc)
-
-        # create feature mask of features that appeared in at least 3/5 CVs
-        feature_matrix = np.vstack(cv_train_selected_features)
-        feature_counts = np.sum(feature_matrix, axis = 0)
-        #final_features = feature_counts >= 3
-        final_features = feature_counts >= 4
-
-        # append to dictionary
-        selected_features = np.array(predictors)[final_features]
-        feature_names = selected_features
-        selected_features = ', '.join(selected_features)
-        selected_features_dict[key].append(selected_features)
-        print(len(selected_features), flush = True)
-
-        # select features in val and test
-        X_val_selected = X_val_scaled[:, final_features]
-        X_test_selected = X_test_scaled[:, final_features]
-        print(X_val_selected.shape[1], flush = True)
+        print(X_train_scaled.shape[1], flush = True)
         
         # make base model
         model = xgb.XGBClassifier(objective = 'binary:logistic', random_state = iter, n_jobs = -1)
@@ -275,27 +149,28 @@ for iter in list(range(1, 101)):
         n_neg = sum(train['AD'] == 0)
         
         param_grid = {
-            'n_estimators' : [50, 100, 200, 300, 400],
+            'n_estimators' : [30, 50, 100, 200, 300, 400, 500, 600],
             'max_depth' : [1, 2, 3],
-            'learning_rate' : [0.02, 0.03],
-            'subsample' : [0.5, 0.6, 0.7],
-            'colsample_bytree' : [0.5, 0.6, 0.7, 0.8, 0.9],
-            'gamma' : [0.1, 0.2, 0.3, 0.4, 0.5],
-            'min_child_weight' : [10, 20, 30, 40],
+            'learning_rate' : [0.01, 0.02, 0.03],
+            'subsample' : [0.4, 0.5, 0.6, 0.7],
+            'colsample_bytree' : [0.4, 0.5, 0.6, 0.7, 0.8],
+            'gamma' : [0.3, 0.4, 0.5],
+            'min_child_weight' : [20, 30, 40],
             'scale_pos_weight' : [n_neg/n_pos]
         }
 
         # hyperparameter tuning
         random_search = RandomizedSearchCV(estimator = model, param_distributions = param_grid, cv = 5, random_state = iter, scoring = 'balanced_accuracy', n_jobs = -1, n_iter = 10)
-        random_search.fit(X_val_selected, val['AD'])
+        random_search.fit(X_train_scaled, train['AD'])
+        #random_search.fit(X_val_selected, val['AD'])
 
         # select best model
         best_model = random_search.best_estimator_
         best_params_dict[key].append((pd.DataFrame(random_search.best_params_, index = [0]).T.reset_index().rename(columns = {'index' : 'hyperparameter'})))
-        #print("Best Parameters:", random_search.best_params_, flush = True)
 
         # gain for feature importance
         importances = best_model.get_booster().get_score(importance_type = 'gain')
+        feature_names = predictors
         feature_importance = pd.DataFrame({'feature_num' : list(importances.keys()), colname : list(importances.values())})
         feature_names_df = pd.DataFrame({'feature' : feature_names})
         feature_names_df['feature_num'] = list(range(1, (len(feature_names_df.index)) + 1))
@@ -304,23 +179,23 @@ for iter in list(range(1, 101)):
         feature_importance = feature_df.merge(feature_importance, on = 'feature', how = 'left').sort_values(by = ['order']).drop(columns = ['order'])
         feature_importance_dict[key].append(feature_importance)
 
-        # test in validation set
-        y_val_pred_bin = best_model.predict(X_val_selected)
-        y_val_pred_cont = best_model.predict_proba(X_val_selected)[:, 1]
+        # test in training set
+        y_train_pred_bin = best_model.predict(X_train_scaled)
+        y_train_pred_cont = best_model.predict_proba(X_train_scaled)[:, 1]
 
-        auroc = roc_auc_score(val['AD'], y_val_pred_cont)
-        auprc = average_precision_score(val['AD'], y_val_pred_cont)
-        f1 = f1_score(val['AD'], y_val_pred_bin)
-        balanced_acc = balanced_accuracy_score(val['AD'], y_val_pred_bin)
+        auroc = roc_auc_score(train['AD'], y_train_pred_cont)
+        auprc = average_precision_score(train['AD'], y_train_pred_cont)
+        f1 = f1_score(train['AD'], y_train_pred_bin)
+        balanced_acc = balanced_accuracy_score(train['AD'], y_train_pred_bin)
 
-        val_auroc_dict[key].append(auroc)
-        val_auprc_dict[key].append(auprc)
-        val_f1_dict[key].append(f1)
-        val_balanced_acc_dict[key].append(balanced_acc)
+        train_auroc_dict[key].append(auroc)
+        train_auprc_dict[key].append(auprc)
+        train_f1_dict[key].append(f1)
+        train_balanced_acc_dict[key].append(balanced_acc)
 
         # test in testing set
-        y_test_pred_bin = best_model.predict(X_test_selected)
-        y_test_pred_cont = best_model.predict_proba(X_test_selected)[:, 1]
+        y_test_pred_bin = best_model.predict(X_test_scaled)
+        y_test_pred_cont = best_model.predict_proba(X_test_scaled)[:, 1]
 
         auroc = roc_auc_score(test['AD'], y_test_pred_cont)
         auprc = average_precision_score(test['AD'], y_test_pred_cont)
@@ -337,18 +212,12 @@ for iter in list(range(1, 101)):
     train_auprc_df = pd.DataFrame.from_dict(train_auprc_dict, orient = 'index', columns = [colname])
     train_f1_df = pd.DataFrame.from_dict(train_f1_dict, orient = 'index', columns = [colname])
     train_balanced_acc_df = pd.DataFrame.from_dict(train_balanced_acc_dict, orient = 'index', columns = [colname])
-
-    val_auroc_df = pd.DataFrame.from_dict(val_auroc_dict, orient = 'index', columns = [colname])
-    val_auprc_df = pd.DataFrame.from_dict(val_auprc_dict, orient = 'index', columns = [colname])
-    val_f1_df = pd.DataFrame.from_dict(val_f1_dict, orient = 'index', columns = [colname])
-    val_balanced_acc_df = pd.DataFrame.from_dict(val_balanced_acc_dict, orient = 'index', columns = [colname])
     
     test_auroc_df = pd.DataFrame.from_dict(test_auroc_dict, orient = 'index', columns = [colname])
     test_auprc_df = pd.DataFrame.from_dict(test_auprc_dict, orient = 'index', columns = [colname])
     test_f1_df = pd.DataFrame.from_dict(test_f1_dict, orient = 'index', columns = [colname])
     test_balanced_acc_df = pd.DataFrame.from_dict(test_balanced_acc_dict, orient = 'index', columns = [colname])
 
-    selected_features_df = pd.DataFrame.from_dict(selected_features_dict, orient = 'index', columns = [colname])
     best_params_df =  pd.concat({k: v[0] for k, v in best_params_dict.items()}).reset_index(level = 1, drop = True).rename(columns = {0 : colname})
     best_params_df[colname] = best_params_df[colname].round(3)
     feature_importance_df =  pd.concat({k: v[0] for k, v in feature_importance_dict.items()}).reset_index(level = 1, drop = True)
@@ -359,17 +228,11 @@ for iter in list(range(1, 101)):
     train_f1_list.append(train_f1_df)
     train_balanced_acc_list.append(train_balanced_acc_df)
 
-    val_auroc_list.append(val_auroc_df)
-    val_auprc_list.append(val_auprc_df)
-    val_f1_list.append(val_f1_df)
-    val_balanced_acc_list.append(val_balanced_acc_df)
-
     test_auroc_list.append(test_auroc_df)
     test_auprc_list.append(test_auprc_df)
     test_f1_list.append(test_f1_df)
     test_balanced_acc_list.append(test_balanced_acc_df)
 
-    selected_features_list.append(selected_features_df)
     best_params_list.append(best_params_df)
     feature_importance_list.append(feature_importance_df)
 
@@ -380,17 +243,11 @@ train_auprc_final = pd.concat(train_auprc_list, axis = 1)
 train_f1_final = pd.concat(train_f1_list, axis = 1)
 train_balanced_acc_final = pd.concat(train_balanced_acc_list, axis = 1)
 
-val_auroc_final = pd.concat(val_auroc_list, axis = 1)
-val_auprc_final = pd.concat(val_auprc_list, axis = 1)
-val_f1_final = pd.concat(val_f1_list, axis = 1)
-val_balanced_acc_final = pd.concat(val_balanced_acc_list, axis = 1)
-
 test_auroc_final = pd.concat(test_auroc_list, axis = 1)
 test_auprc_final = pd.concat(test_auprc_list, axis = 1)
 test_f1_final = pd.concat(test_f1_list, axis = 1)
 test_balanced_acc_final = pd.concat(test_balanced_acc_list, axis = 1)
 
-selected_features_final = pd.concat(selected_features_list, axis = 1)
 best_params_final = pd.concat(best_params_list, axis = 1)
 feature_importance_final = pd.concat(feature_importance_list, axis = 1)
 
@@ -400,11 +257,6 @@ train_auprc_final['TRAIN_AUPRC_MEAN'] = train_auprc_final.mean(axis = 1)
 train_f1_final['TRAIN_F1_MEAN'] = train_f1_final.mean(axis = 1)
 train_balanced_acc_final['TRAIN_BALANCED_ACCURACY_MEAN'] = train_balanced_acc_final.mean(axis = 1)
 
-val_auroc_final['VAL_AUROC_MEAN'] = val_auroc_final.mean(axis = 1)
-val_auprc_final['VAL_AUPRC_MEAN'] = val_auprc_final.mean(axis = 1)
-val_f1_final['VAL_F1_MEAN'] = val_f1_final.mean(axis = 1)
-val_balanced_acc_final['VAL_BALANCED_ACCURACY_MEAN'] = val_balanced_acc_final.mean(axis = 1)
-
 test_auroc_final['TEST_AUROC_MEAN'] = test_auroc_final.mean(axis = 1)
 test_auprc_final['TEST_AUPRC_MEAN'] = test_auprc_final.mean(axis = 1)
 test_f1_final['TEST_F1_MEAN'] = test_f1_final.mean(axis = 1)
@@ -412,16 +264,12 @@ test_balanced_acc_final['TEST_BALANCED_ACCURACY_MEAN'] = test_balanced_acc_final
 
 # make combined df with means
 mean_comb = pd.concat([train_auroc_final[['TRAIN_AUROC_MEAN']],
-                       val_auroc_final[['VAL_AUROC_MEAN']],
                        test_auroc_final[['TEST_AUROC_MEAN']],
                        train_auprc_final[['TRAIN_AUPRC_MEAN']],
-                       val_auprc_final[['VAL_AUPRC_MEAN']],
                        test_auprc_final[['TEST_AUPRC_MEAN']],
                        train_f1_final[['TRAIN_F1_MEAN']],
-                       val_f1_final[['VAL_F1_MEAN']],
                        test_f1_final[['TEST_F1_MEAN']],
                        train_balanced_acc_final[['TRAIN_BALANCED_ACCURACY_MEAN']],
-                       val_balanced_acc_final[['VAL_BALANCED_ACCURACY_MEAN']],
                        test_balanced_acc_final[['TEST_BALANCED_ACCURACY_MEAN']]], axis = 1)
 mean_comb  = mean_comb.round(3)
 
@@ -438,12 +286,7 @@ feature_importance_final = pd.concat([feature, feature_importance_final], axis =
 train_auroc_final.to_csv(output_dir + 'indiv_metrics/' + 'TRAIN.AUROC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 train_auprc_final.to_csv(output_dir + 'indiv_metrics/' + 'TRAIN.AUPRC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 train_f1_final.to_csv(output_dir + 'indiv_metrics/' + 'TRAIN.F1_SCORE.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
-train_balanced_acc_final.to_csv(output_dir + 'indiv_metrics/' + 'TRAIN.BALANCED_ACCURACY.XGBoost' + '.' + '.' + output_tag + key_name + '.csv')
-
-val_auroc_final.to_csv(output_dir + 'indiv_metrics/' + 'VAL.AUROC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
-val_auprc_final.to_csv(output_dir + 'indiv_metrics/' + 'VAL.AUPRC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
-val_f1_final.to_csv(output_dir + 'indiv_metrics/' + 'VAL.F1_SCORE.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
-val_balanced_acc_final.to_csv(output_dir + 'indiv_metrics/' + 'VAL.BALANCED_ACCURACY.XGBoost' + '.' + '.' + output_tag + key_name + '.csv')
+train_balanced_acc_final.to_csv(output_dir + 'indiv_metrics/' + 'TRAIN.BALANCED_ACCURACY.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 
 test_auroc_final.to_csv(output_dir + 'indiv_metrics/' + 'TEST.AUROC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 test_auprc_final.to_csv(output_dir + 'indiv_metrics/' + 'TEST.AUPRC.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
@@ -452,7 +295,6 @@ test_balanced_acc_final.to_csv(output_dir + 'indiv_metrics/' + 'TEST.BALANCED_AC
 
 mean_comb.to_csv(output_dir + 'ALL_SPLITS.MEAN_METRICS.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 
-selected_features_final.to_csv((output_dir + 'Selected_Features.XGBoost' + '.' + key_name + '.' + output_tag + '.txt'), sep = '\t')
 best_params_final.to_csv(output_dir + 'Best_Params.XGBoost' + '.' + key_name + '.' + output_tag + '.csv')
 feature_importance_final.to_csv(output_dir + 'Feature_Importance.gain.XGBoost' + '.' + key_name + '.' + output_tag + '.csv', na_rep = 'NaN')
 print_mem_usage()

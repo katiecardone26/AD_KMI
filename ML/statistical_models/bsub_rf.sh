@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "rf[1-4]"
+#BSUB -J "rf[1-8]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -92,35 +92,33 @@ fi
 
 # define parallelization variables
 INPUT_PREFIX=(
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.standard_scaled.go.keep_quest_comb'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.standard_scaled.go.keep_quest_comb'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.gene_average.pathway_scores.minmax_scaled.go.keep_quest_comb'
-        'AOU_ALL.UKBB.metasoft.gene_score.ROSMAP.RNAseq.methylation.somoscan_proteomics.MSBB.RNAseq.methylation.tmt_proteomics.ADSP.pathway_average.pathway_scores.minmax_scaled.go.keep_quest_comb'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.covariates'
 )
 
-KEY_NAME=(
-        'avg_gene'
-        'avg_pathway'
-        'avg_gene'
-        'avg_pathway'
+OUTPUT_TAG=(
+        'pval_none'
+        'pval_0.05'
+        'pval_0.01'
+        'pval_0.001'
+        'pval_0.0001'
+        'pval_0.00001'
+        'pval_0.000001'
+        'pval_0.0000001'
 )
-
-SCALE_KEY=(
-        'standard'
-        'standard'
-        'minmax'
-        'minmax'
-)
-
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
 # Define parallelization variable indices
 INPUT_PREFIX_INDEX=${INPUT_PREFIX[$INDEX]}
-KEY_NAME_INDEX=${KEY_NAME[$INDEX]}
-SCALE_KEY_INDEX=${SCALE_KEY[$INDEX]}
-
+OUTPUT_TAG_INDEX=${OUTPUT_TAG[$INDEX]}
 
 # load modules
 module purge
@@ -128,6 +126,6 @@ module load python
 
 # call script
 python run_rf_hyperparameter_tuning.py \
-        --input_prefix ${INPUT_PREFIX_INDEX}.covariates \
-        --key_name ${KEY_NAME_INDEX} \
-        --output_tag ${SCALE_KEY_INDEX}_scaled.go.keep_quest_comb
+        --input_prefix ${INPUT_PREFIX_INDEX} \
+        --key_name avg_gene \
+        --output_tag multiomics_pathway_average_weighted.${OUTPUT_TAG_INDEX}.standard_scaled.go.keep_quest_comb

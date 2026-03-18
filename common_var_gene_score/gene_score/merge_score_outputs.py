@@ -31,7 +31,7 @@ for chr in list(range(1, 23)):
     print(print_string)
     
     score_filename = score_prefix + str(chr) + '.txt'
-    score=pd.read_csv(score_filename,sep='\t',dtype=str)
+    score= pd.read_csv(score_filename,sep='\t',dtype=str)
     
     id_df = score[['IID']]
     avg_df = score.filter(regex = '_AVG')
@@ -54,26 +54,6 @@ print(len(avg_all_chr.columns.unique()))
 sum_all_chr = pd.concat(sum_dfs, axis = 1)
 print(sum_all_chr.shape)
 print(len(sum_all_chr.columns.unique()))
-
-# remove RNA genes
-## read in RNA file
-rna_avg = pd.read_csv('adsp_vep_min_gene_pos/v110/duplicate_rna_genes_avg_gene_score.txt', header = None)
-print(rna_avg)
-## add sum suffixes (avg is already there)
-rna_sum = rna_avg.copy()
-rna_sum[0] = rna_sum[0].str.replace('_AVG','_SUM')
-print(rna_sum)
-## create keep lists
-avg_keep = list(set(avg_all_chr.columns.to_list()) - set(rna_avg[0]))
-sum_keep = list(set(sum_all_chr.columns.to_list()) - set(rna_sum[0]))
-## remove
-print(len(avg_all_chr.shape))
-avg_all_chr = avg_all_chr[avg_keep]
-print(len(avg_all_chr.shape))
-
-print(len(sum_all_chr.shape))
-sum_all_chr = sum_all_chr[sum_keep]
-print(len(sum_all_chr.shape))
 
 # check if there are still duplicates
 if len(avg_all_chr.columns) != len(set(avg_all_chr.columns)):
@@ -103,8 +83,8 @@ else:
 
 # add phenotype and covariates
 print("reading in phenotype dataframe")
-pheno=pd.read_csv(pheno_filename, sep = '\t')
-pheno=pheno[[pheno_id_col, 'DX_harmonized', 'Age_harmonized', 'Sex', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8']]
+pheno = pd.read_csv(pheno_filename, sep = '\t')
+pheno = pheno[[pheno_id_col, 'DX_harmonized', 'Age_harmonized', 'Sex', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8']]
 pheno.rename(columns = {pheno_id_col : 'ID',
                         'DX_harmonized' : 'ALZ_STATUS',
                         'Age_harmonized' : 'AGE',

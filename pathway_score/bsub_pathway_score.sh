@@ -91,28 +91,28 @@ fi
 ######################################################################
 
 # define parallelization variables
-SCALE_KEY=(
-        'scaled'
-        'minmax.scaled'
+OMICS_TYPE=(
+        'genomics'
+        'multiomics'
 )
 
-OUTPUT_TAG=(
-        'standard_scaled'
-        'minmax_scaled'
+PATHWAY_MAP=(
+        'genomics'
+        'omics'
 )
-
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
 # Define parallelization variable indices
-SCALE_KEY_INDEX=${SCALE_KEY[$INDEX]}
-OUTPUT_TAG_INDEX=${OUTPUT_TAG[$INDEX]}
+OMICS_TYPE_INDEX=${OMICS_TYPE[$INDEX]}
+PATHWAY_MAP_INDEX=${PATHWAY_MAP[$INDEX]}
 
 module unload python
 module load python
 
-python avg_pathway_score_no_pval_thres_all_pathways.py \
-        --pathway_map go/AD_KMI.ADSP.ROSMAP.all_omics.MSBB.all_omics.VEP_113.ref_gene.go.gene_to_pathway.no_duplicates.pathway_mapping.txt \
-        --scale_key ${SCALE_KEY_INDEX} \
-        --output_tag ${OUTPUT_TAG_INDEX}.go.keep_quest_comb
+python avg_pathway_score_no_pval_thres_separate_omics.py \
+        --pathway_map go/AD_KMI.ADSP.${PATHWAY_MAP_INDEX}_only.GRCh38.113.refseq.exp_validated.go.gene_to_pathway.no_duplicates.pathway_intersection.pathway_mapping.txt \
+        --scale_key scaled \
+        --omics_type ${OMICS_TYPE_INDEX} \
+        --output_tag pathway_intersection.standard_scaled.go.keep_quest_comb

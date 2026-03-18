@@ -13,7 +13,7 @@ def make_parser():
     parser.add_argument('--ref_col', help = 'reference allele column name in sumstats file')
     parser.add_argument('--alt_col', help = 'alternate allele column name in sumstats file')
     parser.add_argument('--beta_col', help = 'beta column name in sumstats file')
-    parser.add_argument('--output', help= ' path to output file')
+    parser.add_argument('--output', help = ' path to output file')
 
     return parser
 

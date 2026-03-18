@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "beta_gene[1-2]"
+#BSUB -J "beta_gene[1]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -92,41 +92,33 @@ fi
 
 # define parallelization variables
 SUMSTATS=(
-        "AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.adsp_intersect.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt"
         "AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.adsp_intersect.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt"
 )
 GENE_ANNOT=(
         'ADSP.all_chr.genes.by_position.txt'
-        'ADSP.all_chr.genes.by_position.txt'
 
 )
 OUTPUT=(
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
 )
 
 CHR_COL=(
         'CHR'
-        'CHR'
 )
 
 POS_COL=(
-        'POS'
         'POS'
 )
 
 REF_COL=(
         'REF'
-        'REF'
 )
 
 ALT_COL=(
         'ALT'
-        'ALT'
 )
 
 BETA_COL=(
-        'BETA_FE'
         'BETA_RE'
 )
 

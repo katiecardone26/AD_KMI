@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "xgboost[1-8]"
+#BSUB -J "exclude_clump_variants[1]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -25,11 +25,11 @@
 # In an array job, the variable $LSB_JOBINDEX will contain the index
 # of the current sub-job.
 
-#BSUB -o logs/xgboost.%J-%I.out
-# Filename to append the job's stdout; change to -oo to ovxerwrite.
+#BSUB -o logs/exclude_clump_variants.%J-%I.out
+# Filename to append the job's stdout; change to -oo to overwrite.
 # '%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/xgboost.%J-%I.err
+#BSUB -e logs/exclude_clump_variants.%J-%I.err
 # Filename to append the job's stderr; change to -eo to overwrite.
 # If omitted, stderr is combined with stdout.
 
@@ -40,21 +40,21 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
-#BSUB -R "rusage[mem=26000]"
+#BSUB -R "rusage[mem=8000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 26000
+#BSUB -M 8000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
-#BSUB -v 26000
+#-#BSUB -v 200000
 # Total process virtual (swap) memory limit, in MB.
 
 #-#BSUB -W 24:00
 # Wall time limit, in the format "hours:minutes".
 
-#BSUB -n 4
+#-#BSUB -n 1
 # Number of cores to reserve (on one or more hosts; see below).
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
@@ -70,6 +70,7 @@
 
 ######################################################################
 # RITCHIE LAB BATCH ENVIRONMENT CONFIG
+#
 #
 # This ensures the job runs with the expected lab environment, even
 # if it's submitted from a non-fully-supported host (i.e. CentOS6).
@@ -91,42 +92,32 @@ fi
 ######################################################################
 
 # define parallelization variables
-INPUT_PREFIX=(
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.05.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.01.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.001.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0001.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.00001.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.000001.standard_scaled.go.keep_quest_comb.covariates'
-        'ADSP.genomics.gene_average.pathway_scores.pathway_intersection.multiomics_pathway_average_weighted.pval_0.0000001.standard_scaled.go.keep_quest_comb.covariates'
+# sumstats
+SUMSTATS=(
+"/project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/metasoft/output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.adsp_intersect.cleaned.txt"
 )
-
-OUTPUT_TAG=(
-        'pval_none'
-        'pval_0.05'
-        'pval_0.01'
-        'pval_0.001'
-        'pval_0.0001'
-        'pval_0.00001'
-        'pval_0.000001'
-        'pval_0.0000001'
+# Plink output
+PLINK_OUTPUT=(
+        "clean_output/AD.AOU_ALL.UKBB.no_adjustment.metasoft.RE_PVAL.ADSP.all_variants.r2_0.1.plink_clump_output.all_chr.exclude_variants.txt"
+)
+# output
+OUTPUT=(
+        "/project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/metasoft/output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.adsp_intersect.cleaned.RE_PVAL.r2_0.1_clump_variants_excluded.txt"
 )
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
-# Define parallelization variable indices
-INPUT_PREFIX_INDEX=${INPUT_PREFIX[$INDEX]}
-OUTPUT_TAG_INDEX=${OUTPUT_TAG[$INDEX]}
+# get variable indices
+PLINK_OUTPUT_INDEX=${PLINK_OUTPUT[$INDEX]}
+SUMSTATS_INDEX=${SUMSTATS[$INDEX]}
+OUTPUT_INDEX=${OUTPUT[$INDEX]}
 
-# load modules
-module purge
+module unload python
 module load python
 
-# call script
-python run_xgboost_hyperparameter_tuning.py \
-        --input_prefix ${INPUT_PREFIX_INDEX} \
-        --key_name avg_gene \
-        --remove_missing True \
-        --output_tag multiomics_pathway_average_weighted.${OUTPUT_TAG_INDEX}.standard_scaled.go.keep_quest_comb
+# python command
+python exclude_clump_snps.py \
+--sumstats ${SUMSTATS_INDEX} \
+--clump_exclude ${PLINK_OUTPUT_INDEX} \
+--output ${OUTPUT_INDEX}

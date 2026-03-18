@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "plink_score_input[1-88]"
+#BSUB -J "plink_score_input[1-22]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -92,28 +92,6 @@ fi
 
 # define parallelization variables
 BETA_GENE=(
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
@@ -136,75 +114,9 @@ BETA_GENE=(
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
-        'beta_gene/AOU_EUR.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
 )
 
 OUTPUT=(
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
@@ -227,119 +139,9 @@ OUTPUT=(
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
         'plink_score_input/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.FE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
-        'plink_score_input/AOU_EUR.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_input.chr'
 )
 
 CHR=(
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        10
-        11
-        12
-        13
-        14
-        15
-        16
-        17
-        18
-        19
-        20
-        21
-        22
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        10
-        11
-        12
-        13
-        14
-        15
-        16
-        17
-        18
-        19
-        20
-        21
-        22
-        1
-        2
-        3
-        4
-        5
-        6
-        7
-        8
-        9
-        10
-        11
-        12
-        13
-        14
-        15
-        16
-        17
-        18
-        19
-        20
-        21
-        22
         1
         2
         3
