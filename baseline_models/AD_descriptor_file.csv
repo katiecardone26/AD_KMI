@@ -1,0 +1,2 @@
+COHORT,LD_PANEL_ANCESTRY,PHENOTYPE,SAMPLE_SIZE,SUMSTATS_FILEPATH
+AOU_UKBB,EUR,AD,485770,common_var_gene_score/aou_ukbb_meta/metasoft/output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.cleaned.txt
