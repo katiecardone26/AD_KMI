@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "vep_113[1-2]"
+#BSUB -J "vep_113[1]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -94,7 +94,6 @@ fi
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
 )
 
@@ -106,20 +105,21 @@ INDEX=$((LSB_JOBINDEX-1))
 ANCESTRY_INDEX=${ANCESTRY[$INDEX]}
 
 # load singularity module
-module load singularity
+module load apptainer
 
-singularity exec --bind ./VEP_cache:/VEP_cache/,./output:/output/,./vep_output:/vep_output/ vep.sif \
+apptainer exec --bind /project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/metasoft/VEP_cache:/VEP_cache/,./output:/output/,./vep_output:/vep_output/ vep.sif \
         vep --dir /VEP_cache/ --cache \
         --offline \
         --format vcf \
         --force_overwrite \
         -i /output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft_output.vcf \
-        -o /vep_output/AD.AOU_${ANCESTRY_INDEX}.no_adjustment.metasoft.vep_output.txt \
+        -o /vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.txt \
         --tab \
         --buffer_size 10000 \
         --cache_version 113 \
-        --fields "Uploaded_variation,Location,Allele,SYMBOL,Gene" \
+        --fields "Uploaded_variation,Location,Allele,SYMBOL,Gene,Distance,Existing_variation" \
         --pick_allele_gene \
-        --distance 5000 \
+        --distance 50000 \
         --verbose \
-        --symbol
+        --symbol \
+        --check_existing

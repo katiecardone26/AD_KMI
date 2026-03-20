@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_plots[1-4]
+#BSUB -J make_plots[1-2]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -64,30 +64,22 @@
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
-    "EUR"
     "ALL"
 )
 
 SIG=(
-   "1.4e-08" 
-   "1.3e-08"
-   "1.4e-08" 
-   "1.3e-08"
+   "5e-8"
+   "5e-8"
 )
 
 SUG=(
-    "2.7e-07"
-    "2.6e-07"
-    "2.7e-07"
-    "2.6e-07"
+    "1e-5"
+    "1e-5"
 )
 
 INVERT=(
     "True"
-    "True"
-    "False"
     "False"
 )
 
@@ -121,7 +113,7 @@ python manhattan_plotting_script.py \
 --annot_id_col GENE \
 --annot_chr_col CHR \
 --annot_pos_col POS \
---known_genes advp/AD_known_gene_list.txt \
+--known_genes /project/ritchie/projects/AD_KMI/common_var_gene_score/advp/AD_known_gene_list.txt \
 --sig ${SIG_INDEX} \
 --sug ${SUG_INDEX} \
 --annot ${SUG_INDEX} \

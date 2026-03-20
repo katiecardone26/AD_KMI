@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "merge_outputs[1-4]"
+#BSUB -J "merge_outputs[1]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -113,7 +113,7 @@ module load python
 # python command
 python merge_score_outputs.py \
 --score_prefix ${SCORE_PREFIX_INDEX} \
---pheno adsp_filt_phenos/ADSP.filt_pheno_covar.all.txt \
+--pheno /project/ritchie/projects/AD_KMI/common_var_gene_score/adsp_filt_phenos/ADSP.filt_pheno_covar.all.txt \
 --pheno_id_col IID \
 --output_prefix ${OUTPUT_PREFIX_INDEX}
 

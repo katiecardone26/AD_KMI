@@ -6,11 +6,11 @@ import warnings
 import sys
 
 # supress warnings
-warnings.simplefilter(action = 'ignore', category = FutureWarning)
+warnings.simplefilter(action= 'ignore', category = FutureWarning)
 
 # define and parse arguments
 def make_arg_parser():
-    parser = ap.ArgumentParser(description = ".")
+    parser = ap.ArgumentParser(description=".")
 
     parser.add_argument('--score_prefix', required = True, help = 'score filename prefix (before chromosome number)')
     parser.add_argument('--beta_gene', required = True, help = 'beta gene filename')
@@ -41,11 +41,11 @@ score.rename(columns = {'#IID' : 'IID'}, inplace = True)
 
 print('processing input files')
 # filter gene file to chromosome of interest
-gene=gene[gene['CHR'] == int(chrom)]
+gene = gene[gene['CHR'] == int(chrom)]
 print(gene['CHR'].unique())
 # get number of genes per chromosome
-gene_counts=gene['Ensembl_ID'].value_counts().to_frame()
-gene_counts['GENE_NAME'] = gene_counts.index
+gene_counts = gene['Ensembl_ID'].value_counts().to_frame()
+gene_counts['GENE_NAME']= gene_counts.index
 gene_counts.sort_values(by = ['GENE_NAME'], inplace = True)
 gene_counts.drop(columns = ['GENE_NAME'], inplace = True)
 gene_counts_transposed = gene_counts.transpose()
@@ -56,24 +56,24 @@ gene_counts_rep.columns = gene_counts_transposed.columns
 score_gene_counts = pd.concat([score, gene_counts_rep], axis = 1)
 
 # create gene list
-gene_list=gene['Ensembl_ID'].unique().tolist()
+gene_list= gene['Ensembl_ID'].unique().tolist()
 
 # create gene score average columns
 print('creating gene score average columns')
-gene_dfs=[]
+gene_dfs = []
 for gene in gene_list:
     gene_sum_colname = gene + '_SUM'
     gene_avg_colname = gene + '_AVG'
     if gene_sum_colname in score_gene_counts.columns:
         gene_df = score_gene_counts[['IID', gene_sum_colname, gene]]
         gene_df[gene_sum_colname] = gene_df[gene_sum_colname].astype(float)
-        gene_df[gene_avg_colname] = gene_df[gene_sum_colname] / gene_df[gene]
+        gene_df[gene_avg_colname]= gene_df[gene_sum_colname]/gene_df[gene]
         gene_df.drop(columns = [gene], inplace = True)
         gene_df.set_index('IID', inplace = True)
         gene_dfs.append(gene_df)
     else:
         continue
-gene_avg_cat = pd.concat(gene_dfs, axis = 1)
+gene_avg_cat= pd.concat(gene_dfs, axis = 1)
 print(gene_avg_cat)
 
 # export dataframe

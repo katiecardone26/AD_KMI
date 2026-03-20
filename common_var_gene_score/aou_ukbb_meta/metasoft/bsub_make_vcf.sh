@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_vcf[1-2]
+#BSUB -J make_vcf[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -65,13 +65,11 @@
 ## sumstats filepath
 SUMSTATS=(
     "output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.cleaned.txt"
-    "output/AD.AOU_EUR.UKBB.no_adjustment.metasoft_output.extra_cols.cleaned.txt"
 )
 
 ## output prefix
 OUTPUT_PREFIX=(
     "output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output"
-    "output/AD.AOU_EUR.UKBB.no_adjustment.metasoft_output"
 )
 
 # Get the index of the current job

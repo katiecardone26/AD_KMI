@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J run_metasoft_no_adjustments[1-2]
+#BSUB -J run_metasoft_no_adjustments[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -72,7 +72,6 @@ fi
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
 )
 

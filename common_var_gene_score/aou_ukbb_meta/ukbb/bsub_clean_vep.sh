@@ -93,5 +93,7 @@ fi
 
 # python command
 python clean_vep.py \
---vep vep_output/UKBB.AD_GWAS.vep_output.txt \
---output_prefix vep_output/UKBB.AD_GWAS
+        --vep vep_output/UKBB.AD_GWAS.vep_output.txt \
+        --coords /project/ritchie/projects/ADSP_Projects/ADSP_Annotations/VEP_annotation_manual_113/ensembl_start_stop/Homo_sapiens.GRCh38.113.gene_start_stop.autosomes.500kb_upstream_downstream.gtf.txt \
+        --known /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
+        --output_prefix vep_output/UKBB.AD_GWAS

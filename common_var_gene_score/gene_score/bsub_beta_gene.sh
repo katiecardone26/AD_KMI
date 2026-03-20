@@ -92,14 +92,15 @@ fi
 
 # define parallelization variables
 SUMSTATS=(
-        "AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.adsp_intersect.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt"
+        "/project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/metasoft/output/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.adsp_intersect.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt"
 )
 GENE_ANNOT=(
-        'ADSP.all_chr.genes.by_position.txt'
+        '/project/ritchie/projects/ADSP_Projects/ADSP_Annotations/VEP_annotation_manual_113/VEP_cleaned/ADSP.all_chr.genes.by_position.txt'
 
 )
 OUTPUT=(
         'beta_gene/AOU_ALL.UKBB.metasoft.beta_gene.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.txt'
+        
 )
 
 CHR_COL=(
@@ -135,7 +136,6 @@ REF_COL_INDEX=${REF_COL[$INDEX]}
 ALT_COL_INDEX=${ALT_COL[$INDEX]}
 BETA_COL_INDEX=${BETA_COL[$INDEX]}
 
-# run command
 python beta_gene.py \
 --sumstats ${SUMSTATS_INDEX} \
 --gene_annot ${GENE_ANNOT_INDEX} \

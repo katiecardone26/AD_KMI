@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "clean_vep[1]"
+#BSUB -J "adsp_intersect[1-4]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -25,11 +25,11 @@
 # In an array job, the variable $LSB_JOBINDEX will contain the index
 # of the current sub-job.
 
-#BSUB -o logs/clean_vep.%J-%I.out
+#BSUB -o logs/adsp_intersect.%J-%I.out
 # Filename to append the job's stdout; change to -oo to overwrite.
 # '%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/clean_vep.%J-%I.err
+#BSUB -e logs/adsp_intersect.%J-%I.err
 # Filename to append the job's stderr; change to -eo to overwrite.
 # If omitted, stderr is combined with stdout.
 
@@ -40,21 +40,21 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
-#BSUB -R "rusage[mem=16000]"
+#BSUB -R "rusage[mem=100000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 16000
+#BSUB -M 100000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
-#-#BSUB -v 200000
+#BSUB -v 100000
 # Total process virtual (swap) memory limit, in MB.
 
-#-#BSUB -W 24:00
+#BSUB -W 24:00
 # Wall time limit, in the format "hours:minutes".
 
-#-#BSUB -n 4
+#-#BSUB -n 1
 # Number of cores to reserve (on one or more hosts; see below).
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
@@ -70,7 +70,6 @@
 
 ######################################################################
 # RITCHIE LAB BATCH ENVIRONMENT CONFIG
-#
 #
 # This ensures the job runs with the expected lab environment, even
 # if it's submitted from a non-fully-supported host (i.e. CentOS6).
@@ -92,23 +91,36 @@ fi
 ######################################################################
 
 # define parallelization variables
-## ancestry
-ANCESTRY=(
-    "ALL"
+## sumstats prefix
+SUMSTATS=(
+        "AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.cleaned.txt"
 )
+
+SUMSTATS_OUTPUT_PREFIX=(
+        "AD.AOU_ALL.UKBB.no_adjustment.metasoft_output.extra_cols.adsp_intersect.cleaned"
+)
+
+CLUMP_OUTPUT_PREFIX=(
+        "/project/ritchie/projects/AD_KMI/common_var_gene_score/igap_adsp_gene_score/plink_clump/AD.AOU_ALL.UKBB.no_adjustment.metasoft_output"
+)
+
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
-# Define parallelization variable indices
-## ancestry
-ANCESTRY_INDEX=${ANCESTRY[$INDEX]}
+# get variable indices
+SUMSTATS_INDEX=${SUMSTATS[$INDEX]}
+SUMSTATS_OUTPUT_PREFIX_INDEX=${SUMSTATS_OUTPUT_PREFIX[$INDEX]}
+CLUMP_OUTPUT_PREFIX_INDEX=${CLUMP_OUTPUT_PREFIX[$INDEX]}
 
-module purge
+
+# load python modules
+module unload python
 module load python
 
-python clean_vep.py \
-        --vep vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.txt \
-        --coords /project/ritchie/projects/ADSP_Projects/ADSP_Annotations/VEP_annotation_manual_113/ensembl_start_stop/Homo_sapiens.GRCh38.113.gene_start_stop.autosomes.500kb_upstream_downstream.gtf.txt \
-        --known /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
-        --output_prefix vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft
+python find_adsp_intersect.py \
+--sumstats ${SUMSTATS_INDEX} \
+--sumstats_output_prefix ${SUMSTATS_OUTPUT_PREFIX_INDEX} \
+--clump_output_prefix ${CLUMP_OUTPUT_PREFIX_INDEX}
+
+

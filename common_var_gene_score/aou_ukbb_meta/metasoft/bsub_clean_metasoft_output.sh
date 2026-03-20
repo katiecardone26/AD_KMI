@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J clean_metasoft_output[1-2]
+#BSUB -J clean_metasoft_output[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -72,7 +72,6 @@ fi
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
 )
 

@@ -82,11 +82,14 @@ SUMSTATS_INDEX=${SUMSTATS[$INDEX]}
 OUTPUT_PREFIX_INDEX=${OUTPUT_PREFIX[$INDEX]}
 
 # call make vcf script
+module purge
+module load python
+
 python make_vcf.py \
 --sumstats ${SUMSTATS_INDEX} \
 --chr_colname 'CHR' \
 --pos_colname 'POS' \
 --id_colname 'MarkerID' \
---ref_colname 'Allele2' \
---alt_colname 'Allele1' \
+--ref_colname 'Allele1' \
+--alt_colname 'Allele2' \
 --output_prefix ${OUTPUT_PREFIX_INDEX}

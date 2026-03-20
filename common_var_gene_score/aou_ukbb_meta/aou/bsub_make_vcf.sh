@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_vcf[1-2]
+#BSUB -J make_vcf[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -65,13 +65,11 @@
 ## sumstats filepath
 SUMSTATS=(
     "sumstats/AOU.AD.ALL.all_chr.saige_step2.for_export.txt"
-    "sumstats/AOU.AD.EUR.all_chr.saige_step2.for_export.txt"
 )
 
 ## output prefix
 OUTPUT_PREFIX=(
     "sumstats/AOU.AD.ALL"
-    "sumstats/AOU.AD.EUR"
 )
 
 # Get the index of the current job
@@ -84,11 +82,14 @@ SUMSTATS_INDEX=${SUMSTATS[$INDEX]}
 OUTPUT_PREFIX_INDEX=${OUTPUT_PREFIX[$INDEX]}
 
 # call make vcf script
+module purge
+module load python
+
 python make_vcf.py \
 --sumstats ${SUMSTATS_INDEX} \
 --chr_colname 'CHR' \
 --pos_colname 'POS' \
 --id_colname 'MarkerID' \
---ref_colname 'Allele2' \
---alt_colname 'Allele1' \
+--ref_colname 'Allele1' \
+--alt_colname 'Allele2' \
 --output_prefix ${OUTPUT_PREFIX_INDEX}

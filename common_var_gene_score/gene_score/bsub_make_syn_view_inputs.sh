@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_plots[1-2]
+#BSUB -J syn_view_inputs[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -15,13 +15,13 @@
 #   'step' is the step value between array indecies
 #   'limit' is the number of array sub-jobs that can run at once
 # In an array job, the variable $LSB_JOBINDEX will contain the index
-# of the current sub-job.
+# of the current sub-job
 
-#BSUB -o logs/make_plots.%J.%I.out 
+#BSUB -o logs/syn_view_inputs.%J.%I.out 
 # Filename to append the job's stdout; change to -oo to overwrite.
 #'%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/make_plots.%J.%I.err 
+#BSUB -e logs/syn_view_inputs.%J.%I.err
 # Filename to append the job's stderr; change to -eo to overwrite. 
 # If omitted, stderr is combined with stdout. 
 # '%J' becomes the job ID number, '%I' becomes the array index.
@@ -35,11 +35,11 @@
 #-#BSUB -N
 # Send email notification when the job finishes; otherwise, summary is written to the output file
 
-#BSUB -R "rusage[mem=8000]"
+#-#BSUB -R "rusage[mem=200000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 8000
+#-#BSUB -M 200000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
@@ -61,42 +61,14 @@
 
 ######################################################################
 
+# load/unload modules
+module unload python
+module load python
 
-
-# define parallelization variables
-INVERT=(
-    "True"
-    "False"
-)
-
-# Get the index of the current job
-INDEX=$((LSB_JOBINDEX-1))
-
-# Define parallelization variable indices
-## invert
-INVERT_INDEX=${INVERT[$INDEX]}
-
-# activate conda env
-module purge
-eval "$(conda shell.bash hook)"
-conda activate ~/mambaforge/envs/manhattan_plot
-
-# call plotting script
-python manhattan_plotting_script.py \
---annot_input vep_output/UKBB.AD_GWAS.vep_output.cleaned.for_plotting.txt \
---sumstats_input sumstats/UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt \
---title UKBB.AD.ALL \
---sumstats_pval_col p.value \
---sumstats_chr_col CHR \
---sumstats_pos_col POS \
---sumstats_id_col MarkerID \
---annot_id_col GENE \
---annot_chr_col CHR \
---annot_pos_col POS \
---known_genes /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
---sig 8.6e-9 \
---sug 1.7e-7 \
---annot 1.7e-7 \
---plot_sig False \
---invert ${INVERT_INDEX} \
---output_prefix plots/UKBB.AD.ALL.invert=${INVERT_INDEX}
+# command
+python make_syn_view_inputs.py \
+--input_list AOU_ALL.UKBB.metasoft.ADSP.keep_quest_comb.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.average_gene_score.logistic_regression_output.txt \
+--pval_col_list ADSP:pval \
+--es_col_list ADSP:es \
+--pval_thres 0.005 \
+--output AOU_ALL.UKBB.metasoft.ADSP.keep_quest_comb.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.average_gene_score

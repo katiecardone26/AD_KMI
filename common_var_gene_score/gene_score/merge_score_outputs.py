@@ -24,14 +24,14 @@ pheno_id_col = args.pheno_id_col
 output_prefix = args.output_prefix
 
 
-avg_dfs = []
-sum_dfs = []
-for chr in list(range(1, 23)):
+avg_dfs =[]
+sum_dfs =[]
+for chr in list(range(1,23)):
     print_string = "processing chromosome " + str(chr)
     print(print_string)
     
     score_filename = score_prefix + str(chr) + '.txt'
-    score= pd.read_csv(score_filename,sep='\t',dtype=str)
+    score = pd.read_csv(score_filename, sep = '\t', dtype = str)
     
     id_df = score[['IID']]
     avg_df = score.filter(regex = '_AVG')
@@ -85,7 +85,7 @@ else:
 print("reading in phenotype dataframe")
 pheno = pd.read_csv(pheno_filename, sep = '\t')
 pheno = pheno[[pheno_id_col, 'DX_harmonized', 'Age_harmonized', 'Sex', 'PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8']]
-pheno.rename(columns = {pheno_id_col : 'ID',
+pheno.rename(columns = {pheno_id_col: 'ID',
                         'DX_harmonized' : 'ALZ_STATUS',
                         'Age_harmonized' : 'AGE',
                         'Sex' : 'SEX'}, inplace = True)

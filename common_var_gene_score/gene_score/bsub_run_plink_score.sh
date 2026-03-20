@@ -118,8 +118,6 @@ SCORE_INPUT_PREFIX=(
 )
 
 OUTPUT_PREFIX=(
-    
-'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
@@ -141,7 +139,8 @@ OUTPUT_PREFIX=(
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
         'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
-)
+        'plink_score_output/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.plink_score_output.chr'
+        )
 
 CHR=(
         1

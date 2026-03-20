@@ -13,7 +13,7 @@ def make_parser():
     parser.add_argument('--ref_col', help = 'reference allele column name in sumstats file')
     parser.add_argument('--alt_col', help = 'alternate allele column name in sumstats file')
     parser.add_argument('--beta_col', help = 'beta column name in sumstats file')
-    parser.add_argument('--output', help = ' path to output file')
+    parser.add_argument('--output', help= ' path to output file')
 
     return parser
 
@@ -39,13 +39,14 @@ print(gene)
 # clean beta file
 print("cleaning beta file")
 beta['CHR:BP'] = 'chr' + beta[chr_col] + ':' + beta[pos_col]
+#beta['ID'] = beta['CHR:BP'] + ':' + beta[ref_col] + ':' + beta[alt_col]
 beta=beta[['CHR:BP', 'ADSP_variant_id', chr_col, pos_col, ref_col, alt_col, beta_col]]
 beta.rename(columns = {'ADSP_variant_id' : 'ID',
                         chr_col : 'CHR',
                         pos_col : 'POS',
                         alt_col : 'A1',
                         ref_col : 'A2',
-                        beta_col : 'BETA'}, inplace = True)
+                        beta_col : 'BETA'},inplace = True)
 
 # clean gene file
 print("cleaning gene file")

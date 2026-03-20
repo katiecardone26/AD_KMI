@@ -38,14 +38,14 @@ output_prefix = args.output_prefix
 sumstats = pd.read_csv(sumstats_filepath, sep = '\t')
 
 # subset columns
-sumstats_sub = sumstats[[chr_colname, pos_colname, id_colname, ref_colname, alt_colname]]
+sumstats_sub = sumstats[[chr_colname, pos_colname, ref_colname, alt_colname]]
 
 # rename columns
 sumstats_sub.rename(columns = {chr_colname : '#CHROM',
                                 pos_colname : 'POS',
-                                id_colname : 'ID',
                                 ref_colname : 'REF',
                                 alt_colname : 'ALT'}, inplace = True)
+sumstats_sub.insert(2, 'ID', 'chr' + sumstats_sub['#CHROM'].astype(str) + ':' + sumstats_sub['POS'].astype(str) + ':' + sumstats_sub['REF'].astype(str) + ':' + sumstats_sub['ALT'].astype(str))
 
 # add extra columns
 sumstats_sub['QUAL'] = '.'
@@ -57,6 +57,6 @@ sumstats_sub['FORMAT'] = '.'
 output_filepath = output_prefix + '.vcf'
 with open(output_filepath, 'w') as f:
     f.write('##fileformat=VCFv4.2\n')
-    f.write('##fileDate=' + str(datetime.today().date()) + '\n')
+    f.write('##fileDate= ' + str(datetime.today().date()) + '\n')
     f.write('##made by Katie Cardone for VEP annotations\n')
     sumstats_sub.to_csv(f, sep = '\t', index = False)

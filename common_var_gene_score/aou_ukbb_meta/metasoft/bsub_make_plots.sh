@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_plots[1-8]
+#BSUB -J make_plots[1-2]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -64,56 +64,26 @@
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
-    "EUR"
-    "ALL"
-    "EUR"
-    "ALL"
-    "EUR"
     "ALL"
 )
 
 SIG=(
-   '8.6e-9'
-   '8.4e-9'
-   '8.6e-9'
-   '8.4e-9'
-   '8.6e-9'
-   '8.4e-9'
-   '8.6e-9'
-   '8.4e-9'
+   '5e-8'
+   '5e-8'
 )
 
 SUG=(
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
-    '1.7e-7'
+    '1e-5'
+    '1e-5'
 )
 
 INVERT=(
     "True"
-    "True"
-    "False"
-    "False"
-    "True"
-    "True"
-    "False"
     "False"
 )
 
 PVAL=(
-    "FE"
-    "FE"
-    "FE"
-    "FE"
-    "RE"
-    "RE"
     "RE"
     "RE"
 )
@@ -140,17 +110,18 @@ conda activate ~/mambaforge/envs/manhattan_plot
 
 # call plotting script
 python manhattan_plotting_script.py \
---annot_input vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.cleaned.for_plotting.txt \
+--annot_input vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.cleaned.txt \
 --sumstats_input output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft_output.extra_cols.cleaned.txt \
---title AOU_${ANCESTRY_INDEX}.UKBB.AD.META.pval=${PVAL_INDEX} \
+--title "AOU UKBB Meta Analysis" \
 --sumstats_pval_col PVALUE_${PVAL_INDEX} \
 --sumstats_chr_col CHR \
 --sumstats_pos_col POS \
 --sumstats_id_col RSID \
---annot_id_col GENE \
+--annot_id_col ID \
+--annot_gene_col GENE \
 --annot_chr_col CHR \
 --annot_pos_col POS \
---known_genes advp/AD.known_gene_list.for_plotting.txt \
+--known_genes /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
 --sig ${SIG_INDEX} \
 --sug ${SUG_INDEX} \
 --annot ${SUG_INDEX} \
@@ -158,6 +129,8 @@ python manhattan_plotting_script.py \
 --invert ${INVERT_INDEX} \
 --vert_table True \
 --vert_merge_signal True \
+--vert_chr_pos True \
 --horiz_table True \
---horiz_merge_signal True \
+--horiz_merge_signal False \
+--horiz_chr_pos False \
 --output_prefix plots/AOU_${ANCESTRY_INDEX}.UKBB.AD.META.invert=${INVERT_INDEX}.pval=${PVAL_INDEX}

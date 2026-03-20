@@ -4,7 +4,7 @@ import argparse as ap
 
 # define and parse arguments
 def make_arg_parser():
-    parser = ap.ArgumentParser(description = ".")
+    parser = ap.ArgumentParser(description=".")
 
     parser.add_argument('--beta_gene', required = True, help = 'Beta Gene filename')
     parser.add_argument('--chrom', required = True, help = 'Chromosome')

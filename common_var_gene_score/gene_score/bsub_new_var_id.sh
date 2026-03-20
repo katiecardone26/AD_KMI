@@ -11,7 +11,7 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "clean_vep[1]"
+#BSUB -J "adsp_new_id[1-22]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -25,11 +25,11 @@
 # In an array job, the variable $LSB_JOBINDEX will contain the index
 # of the current sub-job.
 
-#BSUB -o logs/clean_vep.%J-%I.out
+#BSUB -o logs/adsp_new_id.%J-%I.out
 # Filename to append the job's stdout; change to -oo to overwrite.
 # '%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/clean_vep.%J-%I.err
+#BSUB -e logs/adsp_new_id.%J-%I.err
 # Filename to append the job's stderr; change to -eo to overwrite.
 # If omitted, stderr is combined with stdout.
 
@@ -40,11 +40,11 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
-#BSUB -R "rusage[mem=16000]"
+#-#BSUB -R "rusage[mem=200000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 16000
+#-#BSUB -M 200000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
@@ -54,7 +54,7 @@
 #-#BSUB -W 24:00
 # Wall time limit, in the format "hours:minutes".
 
-#-#BSUB -n 4
+#-#BSUB -n 1
 # Number of cores to reserve (on one or more hosts; see below).
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
@@ -91,24 +91,12 @@ fi
 # submit it from, not (necessarily) the directory the script is in.
 ######################################################################
 
-# define parallelization variables
-## ancestry
-ANCESTRY=(
-    "ALL"
-)
+module load plink/2.0-20240804
 
-# Get the index of the current job
-INDEX=$((LSB_JOBINDEX-1))
-
-# Define parallelization variable indices
-## ancestry
-ANCESTRY_INDEX=${ANCESTRY[$INDEX]}
-
-module purge
-module load python
-
-python clean_vep.py \
-        --vep vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.txt \
-        --coords /project/ritchie/projects/ADSP_Projects/ADSP_Annotations/VEP_annotation_manual_113/ensembl_start_stop/Homo_sapiens.GRCh38.113.gene_start_stop.autosomes.500kb_upstream_downstream.gtf.txt \
-        --known /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
-        --output_prefix vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft
+# plink command
+plink2 --pfile /project/ritchie/datasets/ADSP/v11_122023/QCed/mac20_noduplicates_geno0.01_mind0.05_maf0.01/ADSP_mac20_noduplicates_geno0.01_mind0.05_maf0.01_chr${LSB_JOBINDEX} \
+--new-id-max-allele-len 500 \
+--set-all-var-ids chr@:#:\$r:\$a \
+--write-snplist \
+--make-pgen \
+--out new_var_id/ADSP.mac20.noduplicates.geno0.01.mind0.05.maf0.01.new_var_id.chr${LSB_JOBINDEX}

@@ -20,9 +20,9 @@ def make_arg_parser():
 
     parser.add_argument('--sumstats_id_col', required = True, help = 'id column name in sumstats')
 
-    parser.add_argument('--annot_id_col', required=True, help = 'id (can be gene) column name in annotation file')
+    parser.add_argument('--annot_id_col', required = True, help = 'id (can be gene) column name in annotation file')
 
-    parser.add_argument('--annot_chr_col', required = True, help='chromosome column name in annotation file')
+    parser.add_argument('--annot_chr_col', required = True, help = 'chromosome column name in annotation file')
 
     parser.add_argument('--annot_pos_col', required = True, help = 'position column name in annotation file')
 
@@ -39,6 +39,18 @@ def make_arg_parser():
     parser.add_argument('--plot_sig', required = True, help = 'whether to annotate significant genes (True) or suggestive genes (False)')
 
     parser.add_argument('--invert', required = True, help = 'whether to invert (True) or not invert (False) the plots')
+
+    parser.add_argument('--vert_table', required = True, help = 'whether to have (True) or have not (False) annotation table in vertical manhattan plot')
+
+    parser.add_argument('--vert_merge_signal', required = True, help = 'whether to merge (True) or not merge (False) signals vertical manhattan plot')
+
+    parser.add_argument('--vert_chr_pos', required = True, help = 'whether to have (True) or not have (False) chr & pos in vertical manhattan plot')
+
+    parser.add_argument('--horiz_table', required = True, help = 'whether to have (True) or have not (False) annotation table in horizontal manhattan plot')
+
+    parser.add_argument('--horiz_merge_signal', required = True, help = 'whether to merge (True) or not merge (False) signals horizontal manhattan plot')
+
+    parser.add_argument('--horiz_chr_pos', required = True, help = 'whether to have (True) or not have (False) chr & pos in horizontal manhattan plot')
 
     parser.add_argument('--output_prefix', required = True, help = 'output prefix')
 
@@ -61,7 +73,7 @@ annot_id_col = args.annot_id_col
 annot_chr_col = args.annot_chr_col
 annot_pos_col = args.annot_pos_col
 if args.annot_extra_cols:
-    annot_extra_cols_list=annot_extra_cols.split(' ')
+    annot_extra_cols_list = annot_extra_cols.split(' ')
 
 known_genes_file = args.known_genes
 
@@ -71,14 +83,20 @@ annot_thres = float(args.annot)
 
 plot_sig_bool = eval(args.plot_sig)
 invert_bool = eval(args.invert)
+vert_table_bool = eval(args.vert_table)
+vert_merge_signal_bool = eval(args.vert_merge_signal)
+vert_chr_pos_bool = eval(args.vert_chr_pos)
+horiz_table_bool = eval(args.horiz_table)
+horiz_merge_signal_bool = eval(args.horiz_merge_signal)
+horiz_chr_pos_bool = eval(args.horiz_chr_pos)
 
 output_prefix = args.output_prefix
 
 annotDF = pd.read_table(annot_input_filename)
 annotDF = annotDF[[annot_id_col, annot_chr_col, annot_pos_col]]
 annotDF = annotDF.rename(columns = {annot_id_col : 'ID',
-                                    annot_chr_col :'#CHROM',
-                                    annot_pos_col :'POS'})
+                                    annot_chr_col : '#CHROM',
+                                    annot_pos_col : 'POS'})
 annotDF['#CHROM'] = annotDF['#CHROM'].replace('X', 23).astype(int)
 
 known_genes = open(known_genes_file).read().splitlines()
@@ -88,9 +106,9 @@ mp = ManhattanPlot(file_path = sumstats_input_filename,
                     test_rows = None)
 mp.load_data(delim = '\t')
 mp.clean_data(col_map = {sumstats_chr_col : '#CHROM',
-                        sumstats_pos_col : 'POS',
-                        sumstats_id_col : 'ID',
-                        sumstats_pval_col : 'P'})
+                         sumstats_pos_col : 'POS',
+                         sumstats_id_col : 'ID',
+                         sumstats_pval_col : 'P'})
 if args.annot_extra_cols:
     mp.add_annotations(annotDF, extra_cols = annot_extra_cols_list)
 else:
@@ -109,15 +127,16 @@ mp.update_plotting_parameters(sug = sug_thres,
                                 annot_thresh = annot_thres,
                                 sig = sig_thres,
                                 ld_block = 4E5,
-                                merge_genes = False,
-                                invert = invert_bool)
+                                merge_genes = vert_merge_signal_bool,
+                                invert = invert_bool,
+                                vertical = True)
 
 mp.full_plot(rep_genes = known_genes,
                  plot_sig = plot_sig_bool,
                  rep_boost = False,
-                 keep_chr_pos = True,
-                 save_res = 150,
-                 save = vert_man_output_filename)
+                 keep_chr_pos = vert_chr_pos_bool,
+                 with_table = vert_table_bool,
+                 save_res = 150, save = vert_man_output_filename)
 
 # Horizontal Without Table
 ## create output file
@@ -126,13 +145,13 @@ mp.update_plotting_parameters(sug = sug_thres,
                                 annot_thresh = annot_thres,
                                 sig = sig_thres,
                                 ld_block = 4E5,
-                                merge_genes = False,
+                                merge_genes = horiz_merge_signal_bool,
                                 invert = invert_bool,
                                 vertical = False)
 
 mp.full_plot(rep_genes = known_genes,
-                plot_sig = plot_sig_bool,
-                rep_boost = False,
-                with_table = True,
-                save_res = 150,
-                save = horiz_man_output_filename)
+                 plot_sig = plot_sig_bool,
+                 rep_boost = False,
+                 keep_chr_pos = horiz_chr_pos_bool,
+                 with_table = horiz_table_bool,
+                 save_res = 150, save = horiz_man_output_filename)

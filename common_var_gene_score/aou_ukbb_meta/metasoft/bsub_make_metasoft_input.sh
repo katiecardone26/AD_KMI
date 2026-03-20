@@ -3,7 +3,7 @@
 # BSUB parameters
 ######################################################################
 
-#BSUB -J make_metasoft_input[1-2]
+#BSUB -J make_metasoft_input[1]
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
@@ -64,7 +64,6 @@
 # define parallelization variables
 ## ancestry
 ANCESTRY=(
-    "EUR"
     "ALL"
 )
 
@@ -81,6 +80,6 @@ module load python
 
 # run Rscript 
 python make_metasoft_input_no_adjustment.py \
---aou_input sumstats/AOU.AD.${ANCESTRY_INDEX}.all_chr.saige_step2.for_export.txt \
---ukbb_input sumstats/UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt \
---output_prefix input/AD.AOU_${ANCESTRY_INDEX}.UKBB.FINNGEN.metasoft_input
+--aou_input /project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/aou/sumstats/AOU.AD.${ANCESTRY_INDEX}.all_chr.saige_step2.for_export.txt \
+--ukbb_input /project/ritchie/projects/AD_KMI/common_var_gene_score/aou_ukbb_meta/ukbb/sumstats/UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt \
+--output_prefix input/AD.AOU_${ANCESTRY_INDEX}.UKBB.metasoft_input

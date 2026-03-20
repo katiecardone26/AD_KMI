@@ -141,8 +141,7 @@ BETA_GENE=(
 )
 
 OUTPUT_PREFIX=(
-
-'cleaned_outputs/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.cleaned_plink_score_output.chr'
+        'cleaned_outputs/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.cleaned_plink_score_output.chr'
         'cleaned_outputs/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.cleaned_plink_score_output.chr'
         'cleaned_outputs/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.cleaned_plink_score_output.chr'
         'cleaned_outputs/AOU_ALL.UKBB.metasoft.VEP_v113.gene_by_position.r2_0.1_clump_variants_excluded.RE_pval_threshold_0.05.cleaned_plink_score_output.chr'

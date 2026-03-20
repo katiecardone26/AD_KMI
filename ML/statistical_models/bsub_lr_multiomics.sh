@@ -11,13 +11,13 @@
 #   bsub < myjob.bsub
 ######################################################################
 
-#BSUB -J "clean_vep[1]"
+#BSUB -J "lr_multiomics[1-2]"
 # Job name and (optional) job array properties, in the format
 #   "jobname"
 # for a simple job, or
 #   "jobname[min-max:step]%limit"
 # for an array job, where
-#   'jobname' is the label shown in job status and summary displays
+#   'jobname' is the label shown in job status and summary displaysx
 #   'min' is the first array index
 #   'max' is the last array index
 #   'step' is the step value between array indecies
@@ -25,11 +25,11 @@
 # In an array job, the variable $LSB_JOBINDEX will contain the index
 # of the current sub-job.
 
-#BSUB -o logs/clean_vep.%J-%I.out
+#BSUB -o logs/lr_multiomics.%J-%I.out
 # Filename to append the job's stdout; change to -oo to overwrite.
 # '%J' becomes the job ID number, '%I' becomes the array index.
 
-#BSUB -e logs/clean_vep.%J-%I.err
+#BSUB -e logs/lr_multiomics.%J-%I.err
 # Filename to append the job's stderr; change to -eo to overwrite.
 # If omitted, stderr is combined with stdout.
 
@@ -40,21 +40,21 @@
 # Send email notification when the job finishes;
 # otherwise, summary is written to the output file.
 
-#BSUB -R "rusage[mem=16000]"
+#BSUB -R "rusage[mem=26000]"
 # Per-process memory reservation, in MB.
 # (Ensures the job will have this minimum memory.)
 
-#BSUB -M 16000
+#BSUB -M 26000
 # Per-process memory limit, in MB.
 # (Ensures the job will not exceed this maximum memory.)
 
-#-#BSUB -v 200000
+#BSUB -v 26000
 # Total process virtual (swap) memory limit, in MB.
 
 #-#BSUB -W 24:00
 # Wall time limit, in the format "hours:minutes".
 
-#-#BSUB -n 4
+#BSUB -n 4
 # Number of cores to reserve (on one or more hosts; see below).
 # The variable $LSB_HOSTS lists allocated hosts like "hostA hostA hostB";
 # the variable $LSB_MCPU_HOSTS lists allocated hosts like "hostA 2 hostB 1".
@@ -70,7 +70,6 @@
 
 ######################################################################
 # RITCHIE LAB BATCH ENVIRONMENT CONFIG
-#
 #
 # This ensures the job runs with the expected lab environment, even
 # if it's submitted from a non-fully-supported host (i.e. CentOS6).
@@ -92,23 +91,31 @@ fi
 ######################################################################
 
 # define parallelization variables
-## ancestry
-ANCESTRY=(
-    "ALL"
+INPUT_PREFIX=(
+        'ADSP.multiomics.gene_average.pathway_scores.pathway_intersection.standard_scaled.go.keep_quest_comb.covariates'
+        'ADSP.multiomics.pathway_average.pathway_scores.pathway_intersection.standard_scaled.go.keep_quest_comb.covariates'
 )
+
+KEY_NAME=(
+        'avg_gene'
+        'avg_pathway'
+)
+
 
 # Get the index of the current job
 INDEX=$((LSB_JOBINDEX-1))
 
 # Define parallelization variable indices
-## ancestry
-ANCESTRY_INDEX=${ANCESTRY[$INDEX]}
+INPUT_PREFIX_INDEX=${INPUT_PREFIX[$INDEX]}
+KEY_NAME_INDEX=${KEY_NAME[$INDEX]}
+SCALE_KEY_INDEX=${SCALE_KEY[$INDEX]}
 
+# load modules
 module purge
 module load python
 
-python clean_vep.py \
-        --vep vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft.vep_output.txt \
-        --coords /project/ritchie/projects/ADSP_Projects/ADSP_Annotations/VEP_annotation_manual_113/ensembl_start_stop/Homo_sapiens.GRCh38.113.gene_start_stop.autosomes.500kb_upstream_downstream.gtf.txt \
-        --known /project/ritchie/projects/AD_KMI/advp/AD.known_gene_list.for_plotting.txt \
-        --output_prefix vep_output/AD.AOU_${ANCESTRY_INDEX}.UKBB.no_adjustment.metasoft
+# call script
+python run_lr_multiomics.py  \
+        --input_prefix ${INPUT_PREFIX_INDEX} \
+        --key_name ${KEY_NAME_INDEX} \
+        --output_tag standard_scaled.go.keep_quest_comb

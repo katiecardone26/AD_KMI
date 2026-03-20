@@ -38,7 +38,7 @@ output_prefix = args.output_prefix
 sumstats = pd.read_csv(sumstats_filepath, sep = '\t', low_memory = False, dtype = {chr_colname : int, pos_colname : int})
 
 # subset columns
-sumstats_sub = sumstats[[chr_colname, pos_colname, id_colname, ref_colname, alt_colname]]
+sumstats_sub=sumstats[[chr_colname, pos_colname, id_colname, ref_colname, alt_colname]]
 
 # rename columns
 sumstats_sub.rename(columns = {chr_colname : '#CHROM',

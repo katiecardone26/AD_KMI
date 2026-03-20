@@ -92,9 +92,9 @@ fi
 ######################################################################
 
 # load singularity module
-module load singularity
+module load apptainer
 
-singularity exec --bind ./VEP_cache:/VEP_cache/,./sumstats:/sumstats/,./vep_output:/vep_output/ vep.sif \
+apptainer exec --bind ./VEP_cache:/VEP_cache/,./sumstats:/sumstats/,./vep_output:/vep_output/ vep.sif \
         vep --dir /VEP_cache/ --cache \
         --offline \
         --format vcf \
@@ -104,8 +104,10 @@ singularity exec --bind ./VEP_cache:/VEP_cache/,./sumstats:/sumstats/,./vep_outp
         --tab \
         --buffer_size 10000 \
         --cache_version 113 \
-        --fields "Uploaded_variation,Location,Allele,SYMBOL,Gene" \
+        --fields "Uploaded_variation,Location,Allele,SYMBOL,Gene,Distance,Existing_variation" \
         --pick_allele_gene \
-        --distance 5000 \
+        --distance 50000 \
         --verbose \
-        --symbol
+        --symbol \
+        --check_existing
+
