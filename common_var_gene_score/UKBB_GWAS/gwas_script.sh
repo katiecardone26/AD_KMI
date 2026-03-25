@@ -1,6 +1,6 @@
 # copy phecode X file to association studies project (in ttyd terminal)
-dx mkdir :/AD_GWAS/input/
-dx cp :/output/file-GxPVBxQJ745y2F5vx3gyzZb7 :/AD_GWAS/input/
+dx mkdir project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/input/
+dx cp project-GfYFGzQJ745y0bqkF0PGF53v:/output/file-GxPVBxQJ745y2F5vx3gyzZb7 project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/input/
 
 # extract demographic data using cohort builder
 # 1. open app32133_20240306021926.dataset, which will open cohort builder
@@ -23,9 +23,9 @@ dx cp :/output/file-GxPVBxQJ745y2F5vx3gyzZb7 :/AD_GWAS/input/
 # 2. open ttyd (terminal)
 # 3. hit run (high priority)
 # 4. run the following code in the terminal
-bgen_input_dir=":/Bulk/Imputation/Imputation_from_genotype_TOPmed"
-sample_input_dir=":/AD_GWAS/input"
-output_dir=":/AD_GWAS/output/initial_qc"
+bgen_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/Bulk/Imputation/Imputation_from_genotype_TOPmed"
+sample_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/input"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/initial_qc"
 
 for chr in $(seq 1 22)
 do
@@ -44,8 +44,8 @@ done
 
 # freq QC- make pgen files for ld pruning (for PCA and saige step 1) and snplist for saige step 2 QC
 # 1. run the following code from ttyd terminal
-inital_qc_input_dir=":/AD_GWAS/output/initial_qc"
-output_dir=":/AD_GWAS/output/freq_qc"
+inital_qc_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/initial_qc"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc"
 
 for chr in $(seq 1 22)
 do
@@ -63,7 +63,7 @@ done
 
 # check number of variants
 # 1. run the following code from ttyd terminal
-dx download :/AD_GWAS/output/freq_qc/ukb21007_c*_b0_v1.topmed_imputed.freq_qc.pvar
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc/ukb21007_c*_b0_v1.topmed_imputed.freq_qc.pvar
 
 for i in $(seq 1 22)
 do
@@ -72,8 +72,8 @@ done
 
 # LD prune
 # 1. run the following code from ttyd terminal
-freq_qc_input_dir=":/AD_GWAS/output/freq_qc"
-output_dir=":/AD_GWAS/output/ld_pruned"
+freq_qc_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
 
 for chr in $(seq 1 22)
 do
@@ -89,7 +89,7 @@ dx run app-swiss-army-knife \
 --instance-type mem1_ssd2_v2_x4
 done
 # 2. check number of variants
-dx download :/AD_GWAS/output/ld_pruned/ukb21007_c*_b0_v1.topmed_imputed.ld_pruned.prune.in --overwrite
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned/ukb21007_c*_b0_v1.topmed_imputed.ld_pruned.prune.in --overwrite
 
 rm ld_pruned.total_linecount
 touch ld_pruned.total_linecount
@@ -102,8 +102,8 @@ awk '{sum += $1} END {print sum}' ld_pruned.total_linecount >> ld_pruned.total_l
 cat ld_pruned.total_linecount
 dx upload ld_pruned.total_linecount --destination /AD_GWAS/output/ld_pruned/
 # 3. extract LD pruned variants
-freq_qc_input_dir=":/AD_GWAS/output/freq_qc"
-output_dir=":/AD_GWAS/output/ld_pruned"
+freq_qc_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
 
 for chr in $(seq 1 22)
 do
@@ -120,7 +120,7 @@ dx run app-swiss-army-knife \
 --instance-type mem1_ssd2_v2_x4
 done
 # 4. check number of variants
-dx download :/AD_GWAS/output/ld_pruned/ukb21007_c*_b0_v1.topmed_imputed.ld_pruned.pvar
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned/ukb21007_c*_b0_v1.topmed_imputed.ld_pruned.pvar
 
 touch ld_pruned_extract.total_linecount
 for i in $(seq 1 22)
@@ -144,8 +144,8 @@ cat merge_list.txt
 dx upload merge_list.txt --destination /AD_GWAS/output/ld_pruned/
 
 # 2. run the following code from ttyd terminal
-ld_pruned_input_dir=":/AD_GWAS/output/ld_pruned"
-output_dir=":/AD_GWAS/output/ld_pruned"
+ld_pruned_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
 
 dx run app-swiss-army-knife \
 -y \
@@ -157,7 +157,7 @@ $(dx find data --path "${ld_pruned_input_dir}" --name "ukb21007_c*_b0_v1.topmed_
 --destination ${output_dir} \
 --instance-type mem1_ssd2_v2_x4
 # 3. check number of variants
-dx download :/AD_GWAS/output/ld_pruned/ukb21007_all_chr_b0_v1.topmed_imputed.ld_pruned.bim
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned/ukb21007_all_chr_b0_v1.topmed_imputed.ld_pruned.bim
 wc -l ukb21007_all_chr_b0_v1.topmed_imputed.ld_pruned.bim
 
 # build eigenstrat applet (version on UKB doesn't have all the needed flags)
@@ -188,7 +188,7 @@ Choose an instance type for your app [mem1_ssd1_v2_x4]: mem1_ssd1_v2_x4
 # 4. build applet
 dx build eigenstrat_kmc --overwrite
 # 5. upload applet scripts
-dx upload -r eigenstrat_kmc/ --path :/AD_GWAS/scripts/eigenstrat_kmc/
+dx upload -r eigenstrat_kmc/ --path project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/scripts/eigenstrat_kmc/
 
 # make convertf par file
 genotypename="input/ukb21007_all_chr_b0_v1.topmed_imputed.ld_pruned.bed"
@@ -208,8 +208,8 @@ echo "snpoutname:      $snpoutname" >> convertf.par
 echo "indivoutname:    $indivoutname" >> convertf.par
 
 # make smartPCA inputs
-ld_pruned_input_dir=":/AD_GWAS/output/ld_pruned"
-output_dir=":/AD_GWAS/output/pca/"
+ld_pruned_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/pca/"
 
 dx run eigenstrat_kmc \
 -y \
@@ -247,8 +247,8 @@ echo "fastmode:        $fastmode" >> smartPCA.par
 echo "numthreads:      $numthreads" >> smartPCA.par
 
 # run smart PCA
-pca_input_dir=":/AD_GWAS/output/pca/"
-output_dir=":/AD_GWAS/output/pca/"
+pca_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/pca/"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/pca/"
 
 dx run eigenstrat_kmc \
 -y \
@@ -265,13 +265,13 @@ dx run eigenstrat_kmc \
 # clean PCA output
 # 1. run the following commands in ttyd terminal
 # 2. download raw eigenvec/eigenval file
-dx download :/AD_GWAS/output/pca/ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA.eigenvec
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/pca/ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA.eigenvec
 # 3. clean eigenvec
 awk 'NR>1' ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA.eigenvec | sed 's/^.*://g' | sed 's/ /,/g' | sed 's/,\+/,/g' | sed 's/,???//g' | sed 's/,/\t/g' > ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA_cleaned.eigenvec
 # 4. clean eigenval
 head -n1 ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA.eigenvec | sed 's/^.*://' | sed 's/^[ \t]*//' | sed 's/ /,/g' | sed 's/,\+/,/g' | sed 's/,$//' | tr ',' '\n' > ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA_cleaned.eigenval
 # 5. upload files
-dx upload ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA_cleaned.* --path :/AD_GWAS/output/pca/
+dx upload ukb21007_all_chr_b0_v1.topmed_imputed.AD.PCA_cleaned.* --path project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/pca/
 
 # add PCs to phenotype covariate file
 # 1. commands in jupyter lab notebook
@@ -304,13 +304,13 @@ Choose an instance type for your app [mem1_ssd1_v2_x4]: mem1_ssd1_v2_x4
 # 4. build applet
 dx build saige_v1.4.2 --overwrite
 # 5. upload applet scripts
-dx upload -r saige_v1.4.2/ --path :/AD_GWAS/scripts/saige_v1.4.2/
+dx upload -r saige_v1.4.2/ --path project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/scripts/saige_v1.4.2/
 
 # run SAIGE step 1 (using SAIGE GWAS GRM applet)
 # 1. run the following code in ttyd terminal
-ld_pruned_input_dir=":/AD_GWAS/output/ld_pruned"
-pheno_input_dir=":/AD_GWAS/input/"
-output_dir=":/AD_GWAS/output/step1"
+ld_pruned_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/ld_pruned"
+pheno_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/input/"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/step1"
 
 dx run saige_v1.4.2 \
 -y \
@@ -335,9 +335,9 @@ dx run saige_v1.4.2 \
 
 # freq QC- make bed files for saige step2 & filt samples
 # 1. run the following code from ttyd terminal
-inital_qc_input_dir=":/AD_GWAS/output/initial_qc"
-pheno_input_dir=":/AD_GWAS/input/"
-output_dir=":/AD_GWAS/output/freq_qc"
+inital_qc_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/initial_qc"
+pheno_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/input/"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc"
 
 for chr in $(seq 1 22)
 do
@@ -356,9 +356,9 @@ done
 
 # run SAIGE step 2 (using SAIGE GWAS- single variant association applet)
 # 1. run the following code in ttyd terminal
-plink_input_dir=":/AD_GWAS/output/freq_qc"
-step1_input_dir=":/AD_GWAS/output/step1"
-output_dir=":/AD_GWAS/output/step2"
+plink_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/freq_qc"
+step1_input_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/step1"
+output_dir="project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/step2"
 
 for chr in $(seq 1 22)
 do
@@ -389,7 +389,7 @@ done
 
 # concatenate outputs
 # 1. run the following code from ttyd terminal
-dx download :/AD_GWAS/output/step2/UKBB.AD_GWAS.saige_step2.chr*
+dx download project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/step2/UKBB.AD_GWAS.saige_step2.chr*
 
 rm *.index
 for i in $(seq 1 22)
@@ -402,4 +402,4 @@ cat header UKBB.AD_GWAS.saige_step2.chr*.no_header.txt > UKBB.AD_GWAS.saige_step
 cut -f6,7,16,17,18,19,20,21,22,23 --complement  UKBB.AD_GWAS.saige_step2.all_chr.txt > UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt
 gzip UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt
 
-dx upload UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt.gz UKBB.AD_GWAS.saige_step2.all_chr.txt --path :/AD_GWAS/output/step2/
+dx upload UKBB.AD_GWAS.saige_step2.all_chr.for_export.txt.gz UKBB.AD_GWAS.saige_step2.all_chr.txt --path project-GgYky4QJj5pkv6G9P8Zp6P26:/AD_GWAS/output/step2/
